@@ -1,4 +1,5 @@
 from array import array
+import functools
 import math
 import operator
 import reprlib
@@ -27,7 +28,11 @@ class Vector:
                 bytes(self._components))
     
     def __eq__(self, other: object) -> bool:
-        return tuple(self) == tuple(other)
+        return len(self) == len(other) and all(a == b for a, b in zip(self, other))
+    
+    def __hash__(self) -> int:
+        hashes = map(hash, self._components)
+        return functools.reduce(operator.xor, hashes)
     
     def __abs__(self):
         return math.hypot(*self)
@@ -80,4 +85,7 @@ if __name__ == '__main__':
     v7 = Vector(range(7))
     print(v7[1:4])
     print(v7[-1:])
+
+    v8 = Vector(range(7))
+    print(v7 == v8)
     
